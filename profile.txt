@@ -1,0 +1,52 @@
+Yashika Jain
+LinkedIn	yashikajain2004@gmail.com
++91-8767961603
+EDUCATIOn	
+
+Degree	Institute	CGPA	Year
+B.Tech/Computer Science Engineering	Shri Ramdeobaba College of Eng. & Mgmt.	8.6	2026
+Senior Secondary/12th	Centre Point	89.4%	2022
+Secondary/10th	Mount Carmel School	90.0%	2020
+ExPERIEncE	
+•	Techwalnut	July 2024 - Present
+Product Developer Intern
+–	Orchestrated IoT kitchen solutions, optimizing workflows for the foodservice industry.
+–	Engineered scalable inventory system, improving efficiency by 25%.
+–	Conducted data-driven research, refining the product roadmap and reducing onboarding by 20%.
+–	Collaborated cross-functionally to launch solutions, driving adoption in the $70B sector.
+•	Licksters	June 2023 - September 2023
+Strategy Intern
+–	Conducted market research to identify trends in the premium fruit popsicle segment.
+–	Spearheaded rebranding, boosting visibility by 10%.
+–	Developed marketing campaigns,increasing engagement by 25%.
+–	Crafted data-driven strategies, driving 15% revenue growth.
+•	Prodigy InfoTech	Jan 2024 – June 2024
+Web Developer Intern
+–	Accelerated web app development with streamlined user journeys.
+–	Developed interactive applications, enhancing user engagement.
+–	Built a dynamic weather app, integrating real-time API data.
+PROjECTs	
+•	AI-Driven Chatbot System
+–	Developed a dynamic chatbot using OpenAI LLMs and LangChain for context-sensitive interactions.
+–	Implemented memory with ConversationBufferMemory for continuous, context-aware conversations.
+–	Integrated sequential chains to process multi-step queries, enhancing task efficiency.
+•	AI-Based Stock Price Predictor
+–	Developed a web app using sentiment analysis and ML for stock predictions.
+–	Integrated LLMs to analyze news and social media for trend forecasting.
+–	Automated real-time data collection via scraping and APIs.
+•	Early Detection of Stroke
+–	Developed a comprehensive stroke prediction system using multiple ML algorithms.
+–	Implemented data preprocessing and exploratory analysis techniques to optimize model performance.
+SKILLs & CERTIFICATIOns	
+•	Tools: Excel, AWS, Postman, Tableau, PowerBI
+•	Programming: Java, Python, SQL, React, HTML, CSS, JS
+•	Introduction to Generative AI certificate by Duke University
+•	Managing Big Data with MySQL certificate by Duke University
+•	Aws Computing certificate by AWS academy
+AchIEvEMEnTs anD RoLEs	
+•	Member,Rotaract Club of RCOEM
+–Led social drives for community welfare
+–Helped 300+Patients during Covid, planted 250+ trees and conducted self defence training for 700+ girls.
+•	Member,Data Science Association (DASCA))
+–Contributed to event planning, logistics, and promotion, ensuring smooth execution and high participant engagement.
+–Collaborated with club members to develop innovative ideas and initiatives to promote data literacy and foster networking opportunities within the student community
