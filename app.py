@@ -109,7 +109,7 @@ def custom_responses(query):
         return None
 
 # Song Recommendation or Play
-song_url = "https://www.youtube.com/watch?v=3JZ_D3ELwOQ"  # Example YouTube link (you can replace with any song URL)
+song_url = "https://www.youtube.com/watch?v=VuNIsY6JdUw"  # Example YouTube link (you can replace with any song URL)
 
 # Main logic to process query and return response
 if query:
