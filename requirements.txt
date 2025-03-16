@@ -5,3 +5,4 @@ huggingface_hub
 python-dotenv
 PyPDF2
 langchain-community
+sentence-transformers
