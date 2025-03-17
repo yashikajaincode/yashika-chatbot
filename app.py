@@ -1,5 +1,9 @@
+import os
 import streamlit as st
 import time
+import smtplib
+import mimetypes
+from email.message import EmailMessage
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import FAISS
@@ -8,9 +12,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 
 # Load and split documents
-loader = TextLoader("profile.txt")  # Assume profile.txt contains your career story and details
+loader = TextLoader("profile.txt")  # Ensure this file exists in your Space
 documents = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=50)  # Optimized chunking
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=50)  
 docs = text_splitter.split_documents(documents)
 
 # Create embeddings and FAISS vector store
@@ -33,104 +37,88 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retrieve
 
 # Streamlit UI Styling
 st.set_page_config(page_title="AskYashika", page_icon="🤖", layout="centered")
-st.markdown("""
-    <style>
-        body {
-            background-color: #1E1E1E;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-        }
-        .main-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .sub-title {
-            font-size: 1rem;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #bbbbbb;
-        }
-        .stTextInput > div > div > input {
-            font-size: 1.1rem;
-            padding: 10px;
-        }
-        .loading {
-            font-size: 1rem;
-            color: #ffcc00;
-            text-align: center;
-            font-weight: bold;
-        }
-        .chat-response {
-            background-color: #333;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            color: white;
-        }
-    </style>
-""", unsafe_allow_html=True)
 
-# Header
-st.markdown('<div class="main-title">🚀 AskYashika </div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Not Into Scanning Resumes? Let\'s Chat About the Good Stuff! (⚠️ Still in development, responses may take time)</div>', unsafe_allow_html=True)
+st.markdown('<h1 style="text-align:center;">🚀 AskYashika</h1>', unsafe_allow_html=True)
+st.markdown('<p style="text-align:center; color:gray;">Not Into Scanning Resumes? Let\'s Chat About the Good Stuff!</p>', unsafe_allow_html=True)
 
 # Input Field for query
 query = st.text_input("💡 Type your question here:", placeholder="E.g., What projects has Yashika worked on?")
 
 # Define custom responses based on predefined topics
 def custom_responses(query):
-    # Keywords for Career-related topics
     career_keywords = ["career", "journey", "internships", "experience"]
     project_keywords = ["projects", "AI projects", "machine learning", "web development"]
     skills_keywords = ["skills", "technologies", "tools", "programming languages"]
     yashika_keywords = ["who is yashika", "what is yashika", "tell me about yashika", "about yashika"]
-    
-    # Check if the query is about Yashika's profile
+
     if any(keyword in query.lower() for keyword in yashika_keywords):
-        return "Yashika Jain is a Computer Science Engineering student at Shri Ramdeobaba College of Engineering & Management. She has a strong interest in AI technologies and data science. Yashika has worked on AI-based projects, including stock price prediction and early stroke detection. She has interned with companies like Techwalnut, Prodigy Infotech, and Zscaler. She is also a member of the Rotaract Club of RCOEM and the Data Science Association."
+        return "Yashika Jain is a Computer Science Engineering student with a strong passion for AI and Data Science. She has interned with companies like Techwalnut, Prodigy Infotech, and Zscaler."
 
-    # Check if the query relates to career
     elif any(keyword in query.lower() for keyword in career_keywords):
-        return "Yashika has worked on multiple impactful projects, including AI-driven stock price prediction and early stroke detection systems. Her journey includes internships at Techwalnut, Prodigy Infotech, and Zscaler."
+        return "Yashika has worked on multiple impactful projects, including AI-driven stock price prediction and early stroke detection systems."
 
-    # Check if the query relates to projects
     elif any(keyword in query.lower() for keyword in project_keywords):
-        return "Yashika's notable projects include building AI-powered chatbots with LangChain, creating a weather app using Flask, and integrating ML algorithms to predict stock prices."
+        return "Yashika has developed AI-powered chatbots, stock price predictors, and real-time weather apps using Flask."
 
-    # Check if the query relates to skills
     elif any(keyword in query.lower() for keyword in skills_keywords):
-        return "Yashika is proficient in programming languages like Python, Java, and Golang. She also works with tools like TensorFlow, Scikit-learn, AWS, and frameworks like React and Flask."
-    
-    # If the query does not match predefined topics, use QA system
+        return "Yashika is proficient in Python, Java, Golang, TensorFlow, Scikit-learn, AWS, and React.js."
+
     else:
         return None
 
-# Song Recommendation or Play
-song_url = "https://www.youtube.com/watch?v=VuNIsY6JdUw"  # Example YouTube link (you can replace with any song URL)
-
-# Main logic to process query and return response
+# Process query and return response
 if query:
     with st.spinner("🤖 Thinking... Hold on tight!"):
         time.sleep(2)  # Simulating processing time
         
-        # Try to get a custom response based on predefined topics
         custom_answer = custom_responses(query)
         
-        # If no custom answer, use QA system
         if custom_answer is None:
             response = qa.invoke(query)
-            # Extract the actual answer from the response (to avoid displaying query + result)
             answer = response.get('result', '') if isinstance(response, dict) else response
-            # Display only the response (no query displayed)
-            st.markdown(f'<div class="chat-response">{answer}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background-color:#333;padding:10px;border-radius:5px;color:white;">{answer}</div>', unsafe_allow_html=True)
         else:
-            # Display custom response (no query displayed)
-            st.markdown(f'<div class="chat-response">{custom_answer}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="background-color:#333;padding:10px;border-radius:5px;color:white;">{custom_answer}</div>', unsafe_allow_html=True)
 
-# Vibe and Chat Section
+# 📩 Resume Email Feature
+def send_resume(email):
+    sender_email = os.getenv("EMAIL_USER")  # Fetch email from Hugging Face Secrets
+    sender_password = os.getenv("EMAIL_PASS")  # Fetch app password securely
+    receiver_email = email
+    subject = "Yashika's Resume for Your Reference"
+    body = "Hello,\n\nPlease find attached Yashika's resume for your reference.\n\nBest regards,\nAskYashika AI Agent"
+
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg["Subject"] = subject
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+
+    resume_path = "Yashika_Resume.pdf"  # Ensure this file is uploaded in the Hugging Face Space
+    if os.path.exists(resume_path):
+        mime_type, _ = mimetypes.guess_type(resume_path)
+        mime_type = mime_type or "application/pdf"
+        with open(resume_path, "rb") as file:
+            msg.add_attachment(file.read(), maintype="application", subtype="pdf", filename="Yashika_Resume.pdf")
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        return "✅ Resume sent successfully!"
+    except Exception as e:
+        return f"❌ Failed to send email: {str(e)}"
+
+# Resume Email UI
+st.subheader("📩 Get Yashika's Resume via Email")
+user_email = st.text_input("Enter your email to receive Yashika's resume:")
+if st.button("Send Resume"):
+    if user_email:
+        response = send_resume(user_email)
+        st.success(response)
+    else:
+        st.warning("⚠️ Please enter a valid email address.")
+
+# 🎶 Vibe and Chat Section
 st.markdown("### 🎶 Want to vibe while chatting?")
-st.markdown("Let the music set the mood for our chat!")
-st.markdown("[Play My Vibe Song](%s)" % song_url, unsafe_allow_html=True)  # Link to play a song
+st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=3JZ_D3ELwOQ)", unsafe_allow_html=True)
