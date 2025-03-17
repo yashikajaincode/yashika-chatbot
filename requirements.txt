@@ -1,12 +1,11 @@
 streamlit
 langchain
-openai
-huggingface_hub
-python-dotenv
-PyPDF2
 langchain-community
+huggingface_hub
 sentence-transformers
 faiss-cpu
 ctransformers
-torch
-transformers
+PyPDF2
+python-dotenv
+email-validator
+
