@@ -35,7 +35,7 @@ llm = CTransformers(
 # Create retrieval-based QA chain
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
 
-# Streamlit UI Styling
+# Set Streamlit page config
 st.set_page_config(page_title="AskYashika", page_icon="🤖", layout="centered")
 
 st.markdown('<h1 style="text-align:center;">🚀 AskYashika</h1>', unsafe_allow_html=True)
@@ -82,7 +82,7 @@ if query:
 
 # 📩 Resume Email Feature
 def send_resume(email):
-    sender_email = os.getenv("EMAIL_USER")  # Fetch email from Hugging Face Secrets
+    sender_email = os.getenv("EMAIL_USER")  # Fetch email from Railway/Secrets
     sender_password = os.getenv("EMAIL_PASS")  # Fetch app password securely
     receiver_email = email
     subject = "Yashika's Resume for Your Reference"
@@ -94,7 +94,7 @@ def send_resume(email):
     msg["From"] = sender_email
     msg["To"] = receiver_email
 
-    resume_path = "Yashika_Resume.pdf"  # Ensure this file is uploaded in the Hugging Face Space
+    resume_path = "Yashika_Resume.pdf"  # Ensure this file is uploaded in Railway
     if os.path.exists(resume_path):
         mime_type, _ = mimetypes.guess_type(resume_path)
         mime_type = mime_type or "application/pdf"
@@ -122,3 +122,8 @@ if st.button("Send Resume"):
 # 🎶 Vibe and Chat Section
 st.markdown("### 🎶 Want to vibe while chatting?")
 st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=3JZ_D3ELwOQ)", unsafe_allow_html=True)
+
+# 🚀 Streamlit App Launch
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8080))  # Railway assigns a dynamic port
+    st.write(f"🔗 App running on port {port}")
