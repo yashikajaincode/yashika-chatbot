@@ -123,7 +123,4 @@ if st.button("Send Resume"):
 st.markdown("### 🎶 Want to vibe while chatting?")
 st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=3JZ_D3ELwOQ)", unsafe_allow_html=True)
 
-# 🚀 Streamlit App Launch
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8080))  # Use Railway-assigned port
-    os.system(f"streamlit run app.py --server.port {port} --server.address 0.0.0.0")
+
