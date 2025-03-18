@@ -123,4 +123,11 @@ if st.button("Send Resume"):
 st.markdown("### 🎶 Want to vibe while chatting?")
 st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=3JZ_D3ELwOQ)", unsafe_allow_html=True)
 
+import sys
+if __name__ == "__main__":
+    sys.argv.append(f"--server.port={port}")
+    sys.argv.append("--server.address=0.0.0.0")  # Allow external access
+    st._run()
+
+
 
