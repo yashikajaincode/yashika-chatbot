@@ -6,27 +6,27 @@ import mimetypes
 from email.message import EmailMessage
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import TextLoader
+from langchain_community.document_loaders import TextLoader
 
 # Load and split documents
-loader = TextLoader("profile.txt")  # Ensure this file exists in your Space
+loader = TextLoader("profile.txt")  # Ensure this file exists
 documents = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=50)  
 docs = text_splitter.split_documents(documents)
 
 # Create embeddings and FAISS vector store
-embeddings = HuggingFaceEmbeddings()
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 vectorstore = FAISS.from_documents(docs, embeddings)
 
 # Configure retriever
 retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
-# Load LLM model with token limits
+# Load LLM model with correct configuration
 llm = CTransformers(
-    model="TheBloke/Mistral-7B-Instruct-v0.1-GGUF",
+    model="TheBloke/Mistral-7B-Instruct-v0.1-GGUF",  # Ensure correct model format
     model_type="mistral",
     max_new_tokens=256,
     temperature=0.7
@@ -94,7 +94,7 @@ def send_resume(email):
     msg["From"] = sender_email
     msg["To"] = receiver_email
 
-    resume_path = "Yashika_Resume.pdf"  # Ensure this file is uploaded in Railway
+    resume_path = "Yashika_Resume.pdf"  # Ensure this file is uploaded
     if os.path.exists(resume_path):
         mime_type, _ = mimetypes.guess_type(resume_path)
         mime_type = mime_type or "application/pdf"
@@ -121,13 +121,8 @@ if st.button("Send Resume"):
 
 # 🎶 Vibe and Chat Section
 st.markdown("### 🎶 Want to vibe while chatting?")
-st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=3JZ_D3ELwOQ)", unsafe_allow_html=True)
+st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=VuNIsY6JdUw)", unsafe_allow_html=True)
 
-import sys
+# Fix for Streamlit server initialization
 if __name__ == "__main__":
-    sys.argv.append(f"--server.port={port}")
-    sys.argv.append("--server.address=0.0.0.0")  # Allow external access
-    st._run()
-
-
-
+    st.run()
