@@ -1,20 +1,20 @@
 import os
-import streamlit as st
 import time
 import smtplib
 import mimetypes
+import gradio as gr
 from email.message import EmailMessage
-from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
+from langchain_community.llms import CTransformers
 
 # Load and split documents
 loader = TextLoader("profile.txt")  # Ensure this file exists
 documents = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=50)  
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=50)
 docs = text_splitter.split_documents(documents)
 
 # Create embeddings and FAISS vector store
@@ -24,9 +24,9 @@ vectorstore = FAISS.from_documents(docs, embeddings)
 # Configure retriever
 retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
-# Load LLM model with correct configuration
+# Load LLM model
 llm = CTransformers(
-    model="TheBloke/Mistral-7B-Instruct-v0.1-GGUF",  # Ensure correct model format
+    model="TheBloke/Mistral-7B-Instruct-v0.1-GGUF",  
     model_type="mistral",
     max_new_tokens=256,
     temperature=0.7
@@ -34,15 +34,6 @@ llm = CTransformers(
 
 # Create retrieval-based QA chain
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
-
-# Set Streamlit page config
-st.set_page_config(page_title="AskYashika", page_icon="🤖", layout="centered")
-
-st.markdown('<h1 style="text-align:center;">🚀 AskYashika</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align:center; color:gray;">Not Into Scanning Resumes? Let\'s Chat About the Good Stuff!</p>', unsafe_allow_html=True)
-
-# Input Field for query
-query = st.text_input("💡 Type your question here:", placeholder="E.g., What projects has Yashika worked on?")
 
 # Define custom responses based on predefined topics
 def custom_responses(query):
@@ -66,21 +57,20 @@ def custom_responses(query):
     else:
         return None
 
-# Process query and return response
-if query:
-    with st.spinner("🤖 Thinking... Hold on tight!"):
-        time.sleep(2)  # Simulating processing time
-        
-        custom_answer = custom_responses(query)
-        
-        if custom_answer is None:
-            response = qa.invoke(query)
-            answer = response.get('result', '') if isinstance(response, dict) else response
-            st.markdown(f'<div style="background-color:#333;padding:10px;border-radius:5px;color:white;">{answer}</div>', unsafe_allow_html=True)
-        else:
-            st.markdown(f'<div style="background-color:#333;padding:10px;border-radius:5px;color:white;">{custom_answer}</div>', unsafe_allow_html=True)
+# AI Agent Function
+def ask_yashika(query):
+    time.sleep(2)  # Simulating processing time
+    custom_answer = custom_responses(query)
+    
+    if custom_answer is None:
+        response = qa.invoke(query)
+        answer = response.get('result', '') if isinstance(response, dict) else response
+    else:
+        answer = custom_answer
 
-# 📩 Resume Email Feature
+    return answer
+
+# Function to send resume
 def send_resume(email):
     sender_email = os.getenv("EMAIL_USER")  # Fetch email from Railway/Secrets
     sender_password = os.getenv("EMAIL_PASS")  # Fetch app password securely
@@ -109,20 +99,28 @@ def send_resume(email):
     except Exception as e:
         return f"❌ Failed to send email: {str(e)}"
 
-# Resume Email UI
-st.subheader("📩 Get Yashika's Resume via Email")
-user_email = st.text_input("Enter your email to receive Yashika's resume:")
-if st.button("Send Resume"):
-    if user_email:
-        response = send_resume(user_email)
-        st.success(response)
-    else:
-        st.warning("⚠️ Please enter a valid email address.")
+# Gradio UI
+with gr.Blocks() as demo:
+    gr.HTML("<h1 style='text-align:center;'>🚀 AskYashika</h1>")
+    gr.HTML("<p style='text-align:center; color:gray;'>Not Into Scanning Resumes? Let's Chat About the Good Stuff!</p>")
 
-# 🎶 Vibe and Chat Section
-st.markdown("### 🎶 Want to vibe while chatting?")
-st.markdown("[Play My Vibe Song](https://www.youtube.com/watch?v=VuNIsY6JdUw)", unsafe_allow_html=True)
+    with gr.Row():
+        query_input = gr.Textbox(label="💡 Type your question here:", placeholder="E.g., What projects has Yashika worked on?")
+        response_output = gr.Textbox(label="🤖 AskYashika's Response", interactive=False)
 
-# Fix for Streamlit server initialization
+    query_button = gr.Button("Ask 🚀")
+    query_button.click(fn=ask_yashika, inputs=query_input, outputs=response_output)
+
+    gr.HTML("<h3>📩 Get Yashika's Resume via Email</h3>")
+    email_input = gr.Textbox(label="Enter your email:")
+    email_button = gr.Button("Send Resume")
+    email_output = gr.Textbox(label="📩 Email Status", interactive=False)
+    
+    email_button.click(fn=send_resume, inputs=email_input, outputs=email_output)
+
+    gr.HTML("<h3>🎶 Want to vibe while chatting?</h3>")
+    gr.HTML('<a href="https://www.youtube.com/watch?v=VuNIsY6JdUw" target="_blank">🎵 Play My Vibe Song</a>')
+
+# Run the Gradio app
 if __name__ == "__main__":
-    st.run()
+    demo.launch()
