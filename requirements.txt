@@ -1,8 +1,7 @@
-streamlit
+gradio
 langchain
-langchain-community
-langchain-huggingface
 ctransformers
-sentence-transformers
 faiss-cpu
-openai
+sentence-transformers
+langchain-huggingface
+faker
