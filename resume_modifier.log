@@ -1,0 +1,6 @@
+2025-03-24 23:21:28,393 - INFO - Attempting to load model...
+2025-03-24 23:21:29,749 - INFO - Model loaded successfully.
+2025-03-24 23:21:29,749 - INFO - Initializing Resume AI Modifier...
+2025-03-24 23:21:31,408 - INFO - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2025-03-24 23:21:32,356 - INFO - HTTP Request: GET http://localhost:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2025-03-24 23:21:34,700 - INFO - HTTP Request: HEAD http://localhost:7860/ "HTTP/1.1 200 OK"
